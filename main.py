@@ -3,6 +3,7 @@ import sys
 import re
 
 # TODO: Refactor main functions into a module.
+# TODO: Frame transition to game as "Your student needs to take a quick test to complete the process"
 
 name_pattern = re.compile(r'[A-Za-z]+')
 phone_pattern = re.compile(r'\d{3}-\d{3}-\d{4}')

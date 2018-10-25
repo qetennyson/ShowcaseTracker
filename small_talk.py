@@ -1,13 +1,8 @@
 import time
 
-time_left = 300
+time_left = 90
 
-time_stats = {
-    'aunt_kara': 60,
-    'uncle joe': 30,
-    'granny lelu': 90,
-    'grandpappy aaron': 70,
-}
+relatives_proper = ['Aunt Kara', 'Uncle Joe', 'Granny Lelu', 'Grandpappy Aaron']
 
 # Relative Intros
 intros = {
@@ -82,10 +77,10 @@ responses = {
         'b': "Oh it's okay darling I'll save some for you in the fridge.\n",
         'c': "*Awkward* Um alright I'll see you later *walks away*\n",
         'd': "Hey! I'm talking to you please listen. You know I'm not gonna be around for long you better lighten up.\n",
-        'outro_a': "",
-        'outro_b': "",
-        'outro_c': "",
-        'outro_d': "",
+        'outro_a': "\n*she's going to try to make you a slice, pray that your pizza rolls finish soon*\n",
+        'outro_b': "\n*she's happy, just hope that she forgets about it before she leaves*\n",
+        'outro_c': "\n*you don't know if she is confused or offended, either way, she's not happy*\n",
+        'outro_d': "\n*you feel awful as she looks like she's about to cry, poor granny*\n",
 
     },
     'grandpappy_aaron': {
@@ -95,10 +90,10 @@ responses = {
         'c': "I know you don't like the military but you don't have to be so rude about it. Ah well, at least you're "
              "being honest, even if it harsh.\n",
         'd': "Hey I'm talking to you! Maybe you should join the army after all, it'll teach you some manners for once.",
-        'outro_a': "",
-        'outro_b': "",
-        'outro_c': "",
-        'outro_d': "",
+        'outro_a': "\n*your response didn't effect him much, he walks off*\n",
+        'outro_b': "\n*you seem to have made him overjoyed, he trots away to find his old uniforms*\n",
+        'outro_c': "\n*he looks slightly disappointed and stumbles away, seemingly to find your brother*\n",
+        'outro_d': "\n*your mom won't be happy about this, get ready to hear about this until Christmas*\n",
 
     },
 
@@ -106,28 +101,28 @@ responses = {
 
 time_factor = {
     'aunt_kara': {
-        'a':30,
-        'b':45,
-        'c':60,
-        'd':10,
+        'a': 30,
+        'b': 45,
+        'c': 60,
+        'd': 10,
     },
     'uncle_joe': {
-        'a':30,
-        'b':25,
-        'c':20,
-        'd':10,
+        'a': 30,
+        'b': 25,
+        'c': 20,
+        'd': 10,
     },
-    'granny_lelu':{
-        'a':90,
-        'b':85,
-        'c':70,
-        'd':85,
+    'granny_lelu': {
+        'a': 90,
+        'b': 85,
+        'c': 70,
+        'd': 10,
     },
-    'grandpappy_aaron':{
-        'a':65,
-        'b':70,
-        'c':60,
-        'd':55,
+    'grandpappy_aaron': {
+        'a': 65,
+        'b': 70,
+        'c': 60,
+        'd': 10,
     }
 }
 
@@ -144,7 +139,32 @@ def relative_intro(relative):
     time.sleep(2)
 
 
-def get_player_answer(relative, answer):
+def get_relative(relatives_available):
+    while True:
+        print("Who would you like to talk to?\n")
+        i = 1
+        for char in relatives_available:
+            print(f"{i}. {char}")
+            i += 1
+        print("\n")
+        choice = input("Choose your relative by entering the number: ")
+        if choice == '1':
+            relatives_proper.remove('Aunt Kara')
+            return 'aunt_kara'
+        elif choice == '2':
+            relatives_proper.remove('Uncle Joe')
+            return 'uncle_joe'
+        elif choice == '3':
+            relatives_proper.remove('Granny Lelu')
+            return 'granny_lelu'
+        elif choice == '4':
+            relatives_proper.remove('Grandpappy Aaron')
+            return 'grandpappy_aaron'
+        else:
+            print("Invalid entry...")
+
+
+def get_answer_responses(relative, answer):
     time.sleep(1)
 
     relative_response = responses[relative]
@@ -162,131 +182,46 @@ def get_time(answer, relative):
     return relative_time[answer]
 
 
-choice = input("Who would you like to talk to, Uncle Joe, Aunt Kara, Grandpappy Aaron, or Granny Lelu? ")
+def get_user_answer():
+    while True:
+        answer = input("Enter your answer - a, b, c, or d: ")
+        if answer in ['a', 'b', 'c', 'd']:
+            return answer
+        else:
+            print("Please answer with a, b, c, or d.")
 
-# TODO: refactor for error handling
-# Clean the choice string from the player and add the underscore for key search
-
-current_relative = choice.lower().strip().replace(' ', '_')
-
-# Display the corresponding relative "intro"
-
-relative_intro(current_relative)
-
-# Display the corresponding relative "question"
-
-print(get_question(current_relative))
-
-# TODO: refactor for error handling
-user_answer = input()
-
-# Gets relative response and outro based on question, and increments time based on response.
-
-get_player_answer(current_relative, user_answer)
+def end_game():
+    pass
 
 
-#     if answer == 'a':
-#         time.sleep(1)
-#         print("That's great kiddo! I used to love fishing. I would live on the lake if it weren't for that darn knee "
-#               "replacement. Well, I'm gonna find your sister, nice to chat with you!\n")
-#         time.sleep(2)
-#         print("*he hops away*\n")
-#         seconds += 30
-#     elif answer == 'b':
-#         time.sleep(1)
-#         print("Oh, well that's too bad. I bet you still had a blast of a summer. Nice to see you champ.\n")
-#         time.sleep(2)
-#         print("*he leaves*\n")
-#         seconds += 25
-#     elif answer == 'c':
-#         time.sleep(1)
-#         print("Aw come on, what's the matter? I guess if you want me to go that badly, I will. Still nice to see you "
-#               "kiddo.\n")
-#         time.sleep(2)
-#         print("*he slumps into the living room*\n")
-#         seconds += 20
-#     elif answer == 'd':
-#         time.sleep(1)
-#         print("Not much of a talker? You never were, no need to be rude though.\n")
-#         time.sleep(2)
-#         print("*he stomps away angrily*\n")
-#         seconds += 10
-# elif choice.lower() == 'aunt kara':
-#     time.sleep(1)
-#     print("\n*you hear a squeal, like a deflating balloon, as your aunt hugs you from behind, almost crushing you with "
-#           "the force*\n")
-#     time.sleep(2)
-#     answer = input(small_talk('Aunt_Kara'))
-#     if answer == 'a':
-#         time.sleep(1)
-#         print("Aw, that's too bad, I hope everything turns out alright. I'm sure things will be fine.\n")
-#         time.sleep(2)
-#         print(
-#             "*Sees Karen at the cookies and runs to stop her from taking all the gluten-free oatmeal raisin cookies*\n")
-#         seconds += 30
-#     elif answer == 'b':
-#         time.sleep(1)
-#         print("Whats with the hesitation. Are you failing your classes? Are you making plenty of friends?\n")
-#         time.sleep(2)
-#         print("*Walks away to talk to your Mom about how your doing in school*\n")
-#         seconds += 45
-#     elif answer == 'c':
-#         time.sleep(1)
-#         print("Good! Nice to see you're doing well. I remember you going to your first day of Kindergarten!\n")
-#         time.sleep(2)
-#         print("*Walks away scrolling through your 'Back To School' pictures on Facebook*\n")
-#         seconds += 60
-#     elif answer == 'd':
-#         time.sleep(1)
-#         print("Is school really that bad? No need to be rude\n")
-#         time.sleep(2)
-#         print("*Walks away in a passive aggressive stride to go talk to your Mother*\n")
-#         seconds += 10
-# elif choice.lower() == 'grandpappy aaron':
-#     time.sleep(1)
-#     print("\n*he hobbles over to you and sits in the broken bar stool*\n")
-#     time.sleep(2)
-#     answer = input(small_talk('Grandpappy Aaron'))
-#     if answer == 'a':
-#         time.sleep(1)
-#         print(
-#             "Really? Never thought you were that interested in the army...doesn't seem like you either. What made you "
-#             "change? Ah nevermind, at least you're interested in it.")
-#         seconds += 65
-#     elif answer == 'b':
-#         time.sleep(1)
-#         print("I'll send you some papers so you can read up on it! Glad I got you interesred!")
-#         seconds += 70
-#     elif answer == 'c':
-#         time.sleep(1)
-#         print("I know you don't like the military but you don't have to be so rude about it. Ah well, at least you're "
-#               "being honest, even if it harsh.")
-#         seconds += 60
-#     elif answer == 'd':
-#         time.sleep(1)
-#         print(
-#             "Hey I'm talking to you! Maybe you should join the army after all, it'll teach you some manners for once.")
-#         seconds += 55
-# elif choice.lower() == 'granny lelu':
-#     time.sleep(1)
-#     print("\n*a warm smile consumes her face as she scoots towards the microwave in her bunny slippers*\n")
-#     time.sleep(2)
-#     answer = input(small_talk('Granny Lelu'))
-#     if answer == 'a':
-#         time.sleep(1)
-#         print("No, Sweetie you should try it right now so I can get your opinion on it.")
-#         time.sleep(2)
-#         print("")
-#         seconds += 90
-#     elif answer == 'b':
-#         time.sleep(1)
-#         print("Oh it's okay darling I'll save some for you in the fridge.")
-#         seconds += 85
-#     elif answer == 'c':
-#         time.sleep(1)
-#         print("*Akward* Um alright I'll see you later *walks away*")
-#         seconds += 80
-#     elif answer == 'd':
-#         time.sleep(1)
-#         print("Hey! I'm talking to you please listen. You know I'm not gonna be around for long you better lighten up.")
-#         seconds += 75
+def pizza_main():
+    while time_left > 0:
+
+        # Clean the choice string from the player and add the underscore for key search
+
+        current_relative = get_relative(relatives_proper)
+
+        # Display the corresponding relative "intro"
+
+        relative_intro(current_relative)
+
+        # Display the corresponding relative "question"
+
+        print(get_question(current_relative))
+
+        # Gets relative response and outro based on question, and increments time based on response.
+
+        user_answer = get_user_answer()
+
+        get_answer_responses(current_relative, user_answer)
+
+        time_left -=
+
+        if len(relatives_proper) == 0:
+            break
+
+    end_game()
+
+
+if __name__ == '__main__':
+    pizza_main()

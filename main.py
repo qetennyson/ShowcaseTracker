@@ -15,8 +15,17 @@ email_pattern = re.compile(r'[^@]+@[^@]+\.[^@]+')
 # Theoretically, you could set the PK to dummy data here, and then
 # the PK is always based on the final appended values, but that
 # seems janky.
-student_pk = 0
-parent_pk = 0
+
+SHOWCASE_CSV = "showcase_roster.csv"
+
+
+def get_current_csvkey(csv_file):
+    try:
+        with open(csv_file, 'r') as csvFile:
+            current_key = csvFile.readlines()[0][0]
+            return current_key
+    except IOError:
+        print("Showcase Roster not found. Check the CSV to verify data is available.")
 
 
 def print_student_header():
@@ -65,13 +74,15 @@ def get_parent_phone():
             print("Please enter a valid phone number as shown.")
 
 
-# TODO: Refactor CSV code below to here.
-def save_info():
-    pass
+def save_roster(new_parent, new_student, csv_file):
+    with open(csv_file, 'a') as csvFile:
+        writer = csv.writer(csvFile)
+        writer.writerow(new_student.values())
+        writer.writerow(new_parent.values())
 
 
-# TODO: Are these going to be different?
-def write_to_file():
+# TODO: View roster from Admin Menu
+def open_roster(csv_file):
     pass
 
 
@@ -105,7 +116,7 @@ def get_student_info():
         student_last = get_last_name()
         if show_info(student_first, student_last):
             student = {
-                'id': student_pk,
+                'id': student_parent_pk,
                 'first_name': student_first,
                 'last_name': student_last,
             }
@@ -114,7 +125,7 @@ def get_student_info():
             continue
 
 
-def get_parent_info():
+def get_parent_info(parent_pk):
     """
 
     :return: parent dictionary containing verified FN, LN, email, phone.
@@ -163,10 +174,28 @@ def admin_menu():
                 break
 
 
+def verify_password():
+    wrong_count = 0
+    while True:
+        password = input("Enter the admin password or e[x]it (hint: an offtrack conversation is?): ")
+        if check_admin_pass(password):
+            return True
+        elif password == 'x':
+            break
+        else:
+            print("Incorrect password.")
+            wrong_count += 1
+
+        if wrong_count >= 3:
+            print("Too many incorrect passwords.")
+            time.sleep(2)
+            break
+
+
 def main():
+    student_parent_pk = get_current_csvkey(SHOWCASE_CSV)
+
     # Maintains primary key count for student/parent dictionaries.
-    global student_pk
-    global parent_pk
 
     while True:
         new_student = {}
@@ -176,25 +205,24 @@ def main():
                     "[a] to enter admin mode: \n")
         if cmd[0].lower().strip() == 'n':
 
-            # Displays a student-oriented greeting.
             print_student_header()
 
             new_student = get_student_info()
 
-            # increment the student PK (globally)
-            student_pk += 1
+            student_parent_pk += 1
 
             # Grab these just for use in print_parent_header.
             student_first = new_student['first_name']
             student_last = new_student['last_name']
 
-            # Displays a parent-oriented greeting.
             print_parent_header(student_first, student_last)
 
-            new_parent = get_parent_info()
+            current_parent_pk = student_parent_pk
 
-            # increment the parent PK (globally)
-            parent_pk += 1
+            new_parent = get_parent_info(current_parent_pk)
+
+            # Saves parent/student values to external CSV.
+            save_roster(new_parent, new_student, SHOWCASE_CSV)
 
             print("\n *** STUDENT MUST FINISH FORM! *** \n")
             time.sleep(6)
@@ -211,30 +239,9 @@ def main():
             except IndexError:
                 continue
 
-            # appends the student and parent dictionaries
-            with open('roster.csv', 'a') as csvFile:
-                writer = csv.writer(csvFile)
-                writer.writerow(new_student.values())
-                writer.writerow(new_parent.values())
-
         elif cmd[0].lower().strip() == 'a':
-            wrong_count = 0
-            while True:
-                password = input("Enter the admin password or e[x]it (hint: an offtrack conversation is?): ")
-                if check_admin_pass(password):
-                    admin_menu()
-                elif password == 'x':
-                    break
-                else:
-                    print("Incorrect password.")
-                    wrong_count += 1
-
-                if wrong_count >= 3:
-                    print("Too many incorrect passwords.")
-                    time.sleep(2)
-                    break
-
-
+            if verify_password():
+                admin_menu()
         else:
             print("Enter a valid command or ask for help.")
 

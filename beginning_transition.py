@@ -12,24 +12,27 @@ start_6 = "Fear strikes you to the core, but you proceed on. Your hunger is far 
 start_7 = "Reaching the ground floor of your house the microwave is in sight. \n"
 start_8 = "You make a mad dash for the freezer and all but throw open the door.\n"
 start_9 = "Grabbing your bounty you toss the PIZZA ROLLS™ on the plate and gently escort them to the " \
-          "microwave like the kind gentleman you are. \n "
+          "microwave."
 start_10 = "Then... \n"
 start_11 = "You begin your approach. \n"
-start_12 = "*** DIRECTIONS *** \n"
-start_13 = "In this game you must approach your various relatives in order to pass the time on the microwave for your " \
+dir_1 = "*** DIRECTIONS *** \n"
+dir_2 = "In this game you must approach your various relatives in order to pass the time on the microwave for your " \
            "pizza rolls. \n "
-start_14 = "Failure to pass the time will lead to a game over with your parents forcing you to stay downstairs and " \
+dir_3 = "Failure to pass the time will lead to a game over with your parents forcing you to stay downstairs and " \
            "eat your pizza rolls in front of everyone. \n "
-start_15 = "As well as the overhanging feelings of eternal shame. \n"
-start_16 = "Have fun! ~ FCHS Computer Science"
-lst = [start_1, start_2, start_3, start_4, start_5, start_6, start_7, start_8, start_9, start_10, start_11, start_12,
-       start_13, start_14, start_15, start_16]
+dir_4 = "As well as the overhanging feelings of eternal shame. \n"
+dir_5 = "Have fun! ~ FCHS Computer Science"
+lst = [start_1, start_2, start_3, start_4, start_5, start_6, start_7, start_8, start_9, start_10, start_11, dir_1,
+       dir_2, dir_3, dir_4, dir_5]
 
 
 def begin_main():
-    for i in lst:
-        print(i.center(225))
-        time.sleep(1)
+    for text in lst[0:10]:
+        print(text.center(225))
+        time.sleep(3)
+    for dir in lst[11:]:
+        print(dir.center(225))
+        time.sleep(5)
 
 
 if __name__ == '__main__':

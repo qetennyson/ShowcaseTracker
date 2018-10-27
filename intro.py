@@ -6,7 +6,13 @@ def pizza_done():
 
 
 def print_header():
-    print("Welcome to Pizza Roll Panic!!!")
+    print("Let's get started...")
+    for i in range(3):
+        print("...".center(200))
+        time.sleep(3)
+        print("****** DRAMATIC LOADING SEQUENCE ******".center(200))
+
+    print("\n\n\nWelcome to Pizza Roll Panic!!!")
     print(r'\\\\\\\\\\\********///////////' + '\n')
     time.sleep(1.5)
 
@@ -49,10 +55,10 @@ def intro_text(player="Default Person"):
         'your bedroom.\n')
     time.sleep(5)
     print('DO YOU ACCEPT THE CHALLENGE?! (YES/NO): \n')
-    get_acceptance(player="Default Person")
+    get_acceptance(player)
 
 
-def get_acceptance(player):
+def get_acceptance(player="Default Person"):
     p_choice = input()
     if p_choice.lower().strip()[0] == 'y':
         print(f"Here we go {player}...")
@@ -74,7 +80,7 @@ def intro_main():
     print_header()
 
     player_name = get_player()
-
+    time.sleep(3)
     intro_text(player_name)
 
 

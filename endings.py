@@ -68,7 +68,10 @@ def roll_credits(names):
     print("\n\n" + par_stu_questions.center(200))
 
 
-roll_win(win_texts)
-roll_credits(creators)
-
+def ending_main(win):
+    if win:
+        roll_win(win_texts)
+    else:
+        roll_loss(lose_texts)
+    roll_credits(creators)
 

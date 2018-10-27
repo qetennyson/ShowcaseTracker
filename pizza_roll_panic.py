@@ -1,9 +1,14 @@
 import time
+import endings as end
+import intro as intro
+import beginning_transition as begin
+# import small_talk_text as st
 
 time_left = 90
 
 relatives_proper = ['Aunt Kara', 'Uncle Joe', 'Granny Lelu', 'Grandpappy Aaron']
 
+# TODO: Refactor data out.
 # Relative Intros
 intros = {
     'aunt_kara': "you hear a squeal, like a deflating balloon, as your aunt hugs you from behind, almost crushing you "
@@ -200,7 +205,22 @@ def get_user_answer():
 
 def pizza_main():
     global time_left
-    while time_left > 0:
+    # Runs the intro text and get's player's name
+    intro.intro_main()
+
+    # Runs the text to get the player downstairs
+    begin.begin_main()
+    while True:
+
+        if time_left <= 0:
+            game_won = True
+            end.ending_main(game_won)
+            break
+
+        if len(relatives_proper) == 0:
+            game_won = False
+            end.ending_main(game_won)
+            break
 
         # Clean the choice string from the player and add the underscore for key search
 
@@ -221,13 +241,6 @@ def pizza_main():
         get_answer_responses(current_relative, user_answer)
 
         time_left -= get_time(user_answer, current_relative)
-
-        if time_left <= 0:
-            # TODO: win game
-            break
-        elif len(relatives_proper):
-            # TODO: lose game
-            pass
 
 
 if __name__ == '__main__':

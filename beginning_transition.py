@@ -26,8 +26,11 @@ lst = [start_1, start_2, start_3, start_4, start_5, start_6, start_7, start_8, s
        start_13, start_14, start_15, start_16]
 
 
-for i in lst:
-    print(i.center(225))
-    time.sleep(1)
+def begin_main():
+    for i in lst:
+        print(i.center(225))
+        time.sleep(1)
 
-# 225
+
+if __name__ == '__main__':
+    begin_main()

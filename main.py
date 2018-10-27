@@ -1,6 +1,8 @@
 import csv
 import sys
 import re
+import time
+import pizza_roll_panic as pizza_roll
 
 # TODO: Refactor main functions into a module.
 # TODO: Frame transition to game as "Your student needs to take a quick test to complete the process"
@@ -9,7 +11,7 @@ name_pattern = re.compile(r'[A-Za-z]+')
 phone_pattern = re.compile(r'\d{3}-\d{3}-\d{4}')
 email_pattern = re.compile(r'[^@]+@[^@]+\.[^@]+')
 
-# TODO: Figure out how to maintain PKs if the program gets shut off.
+# TODO: PK should just be the final appended number.
 # Theoretically, you could set the PK to dummy data here, and then
 # the PK is always based on the final appended values, but that
 # seems janky.
@@ -24,7 +26,7 @@ def print_student_header():
 
 def print_parent_header(s_first, s_last):
     print(f"Please have the parent of {s_first} {s_last} "
-          f"continue this form.\n")
+          f"continue this form.\n".upper())
 
 
 def get_first_name():
@@ -135,6 +137,32 @@ def get_parent_info():
             continue
 
 
+def check_admin_pass(password):
+    return password == 'cheesecake'
+
+
+def admin_menu():
+    admin_cmd = input("[C]lose and save the roster, or restart [P]izza Panic: ")
+    if admin_cmd.lower().strip()[0] == 'c':
+        """ Shuts the program down and saves the CSV  !! RESETS PKs (maybe fix this)!!"""
+        while True:
+            confirm = input("Are you sure you want to finalize the roster and close the program? ("
+                            "Y/N): \n")
+            if confirm[0].lower().strip() == 'y':
+                sys.exit()
+            elif confirm[0].lower().strip() == 'n':
+                break
+            else:
+                print("Enter a valid command.\n")
+    elif admin_cmd.lower().strip()[0] == 'p':
+        while True:
+            confirm = input("Are you sure you want to start a game of Pizza Roll Panic (Y/N): \n")
+            if confirm.lower().strip()[0] == 'y':
+                pizza_roll.pizza_main()
+            else:
+                break
+
+
 def main():
     # Maintains primary key count for student/parent dictionaries.
     global student_pk
@@ -145,7 +173,7 @@ def main():
         new_parent = {}
 
         cmd = input("Type [n]ew to add contact information, or "
-                    "[s]ave to finalize the roster and close the program: \n")
+                    "[a] to enter admin mode: \n")
         if cmd[0].lower().strip() == 'n':
 
             # Displays a student-oriented greeting.
@@ -168,23 +196,44 @@ def main():
             # increment the parent PK (globally)
             parent_pk += 1
 
+            print("\n *** STUDENT MUST FINISH FORM! *** \n")
+            time.sleep(6)
+            print("\n...\n")
+            time.sleep(6)
+
+            verify_student = input(f"Are you back {student_first} {student_last}?  Enter Y to continue: ")
+            try:
+                if verify_student.lower().strip()[0] == 'y':
+                    print(f"\nWelcome back, {student_first} {student_last}.  We have a short test for you.\n")
+                    time.sleep(4)
+                    print(f"\nDon't worry, everyone passes, we just want to see how you do.\n")
+                    pizza_roll.pizza_main()
+            except IndexError:
+                continue
+
             # appends the student and parent dictionaries
             with open('roster.csv', 'a') as csvFile:
                 writer = csv.writer(csvFile)
                 writer.writerow(new_student.values())
                 writer.writerow(new_parent.values())
 
-        # TODO: Prevent PK loss here.
-        elif cmd[0].lower().strip() == 's':
-            """ Shuts the program down and saves the CSV  !! RESETS PKs (maybe fix this)!!"""
+        elif cmd[0].lower().strip() == 'a':
+            wrong_count = 0
             while True:
-                confirm = input("Are you sure you want to finalize the roster and close the program? (Y/N): \n")
-                if confirm[0].lower().strip() == 'y':
-                    sys.exit()
-                elif confirm[0].lower().strip() == 'n':
+                password = input("Enter the admin password or e[x]it (hint: an offtrack conversation is?): ")
+                if check_admin_pass(password):
+                    admin_menu()
+                elif password == 'x':
                     break
                 else:
-                    print("Enter a valid command.\n")
+                    print("Incorrect password.")
+                    wrong_count += 1
+
+                if wrong_count >= 3:
+                    print("Too many incorrect passwords.")
+                    time.sleep(2)
+                    break
+
 
         else:
             print("Enter a valid command or ask for help.")

@@ -22,10 +22,13 @@ SHOWCASE_CSV = "showcase_roster.csv"
 def get_current_csvkey(csv_file):
     try:
         with open(csv_file, 'r') as csvFile:
-            current_key = csvFile.readlines()[0][0]
-            return current_key
+            current_key = csvFile.readlines()[-2][0]
+            current_key_int = int(current_key)
+            return current_key_int
     except IOError:
         print("Showcase Roster not found. Check the CSV to verify data is available.")
+    except IndexError:
+        print(f"New showcase roster will be created after first entry is completed.")
 
 
 def print_student_header():
@@ -83,7 +86,10 @@ def save_roster(new_parent, new_student, csv_file):
 
 # TODO: View roster from Admin Menu
 def open_roster(csv_file):
-    pass
+    with open(csv_file, 'r') as csvFile:
+        for line in csvFile.readlines():
+            print(line)
+    print("\n\n")
 
 
 def show_info(first_name, last_name, email='', phone=''):
@@ -106,7 +112,7 @@ def show_info(first_name, last_name, email='', phone=''):
         return False
 
 
-def get_student_info():
+def get_student_info(student_pk):
     """
 
     :return: student dictionary containing verified student FN, LN.
@@ -116,7 +122,7 @@ def get_student_info():
         student_last = get_last_name()
         if show_info(student_first, student_last):
             student = {
-                'id': student_parent_pk,
+                'id': student_pk,
                 'first_name': student_first,
                 'last_name': student_last,
             }
@@ -152,8 +158,8 @@ def check_admin_pass(password):
     return password == 'cheesecake'
 
 
-def admin_menu():
-    admin_cmd = input("[C]lose and save the roster, or restart [P]izza Panic: ")
+def admin_menu(csv_file):
+    admin_cmd = input("[C]lose and save the roster, [v]iew the current roster, or restart [P]izza Panic: ")
     if admin_cmd.lower().strip()[0] == 'c':
         """ Shuts the program down and saves the CSV  !! RESETS PKs (maybe fix this)!!"""
         while True:
@@ -172,6 +178,10 @@ def admin_menu():
                 pizza_roll.pizza_main()
             else:
                 break
+    elif admin_cmd.lower().strip()[0] == 'v':
+        open_roster(csv_file)
+    else:
+        print("Enter a valid command. \n")
 
 
 def verify_password():
@@ -193,7 +203,10 @@ def verify_password():
 
 
 def main():
-    student_parent_pk = get_current_csvkey(SHOWCASE_CSV)
+    if get_current_csvkey(SHOWCASE_CSV) is None:
+        student_parent_pk = 0
+    else:
+        student_parent_pk = get_current_csvkey(SHOWCASE_CSV) + 1
 
     # Maintains primary key count for student/parent dictionaries.
 
@@ -207,9 +220,7 @@ def main():
 
             print_student_header()
 
-            new_student = get_student_info()
-
-            student_parent_pk += 1
+            new_student = get_student_info(student_parent_pk)
 
             # Grab these just for use in print_parent_header.
             student_first = new_student['first_name']
@@ -221,6 +232,7 @@ def main():
 
             new_parent = get_parent_info(current_parent_pk)
 
+            student_parent_pk += 1
             # Saves parent/student values to external CSV.
             save_roster(new_parent, new_student, SHOWCASE_CSV)
 
@@ -236,12 +248,14 @@ def main():
                     time.sleep(4)
                     print(f"\nDon't worry, everyone passes, we just want to see how you do.\n")
                     pizza_roll.pizza_main()
+                else:
+                    continue
             except IndexError:
                 continue
 
         elif cmd[0].lower().strip() == 'a':
             if verify_password():
-                admin_menu()
+                admin_menu(SHOWCASE_CSV)
         else:
             print("Enter a valid command or ask for help.")
 

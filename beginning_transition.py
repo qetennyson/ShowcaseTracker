@@ -17,13 +17,23 @@ start_10 = "Then... \n"
 start_11 = "You begin your approach. \n"
 dir_1 = "*** DIRECTIONS *** \n"
 dir_2 = "In this game you must approach your various relatives in order to pass the time on the microwave for your " \
-           "pizza rolls. \n "
+        "pizza rolls. \n "
 dir_3 = "Failure to pass the time will lead to a game over with your parents forcing you to stay downstairs and " \
-           "eat your pizza rolls in front of everyone. \n "
+        "eat your pizza rolls in front of everyone. \n "
 dir_4 = "As well as the overhanging feelings of eternal shame. \n"
 dir_5 = "Have fun! ~ FCHS Computer Science"
 lst = [start_1, start_2, start_3, start_4, start_5, start_6, start_7, start_8, start_9, start_10, start_11, dir_1,
        dir_2, dir_3, dir_4, dir_5]
+
+
+def to_microwave():
+    print("\n\nYou input 90 seconds on the microwave.  A gentle hum emanates from the radioactive oven and the light "
+          "beams "
+          "on to your face.  \nBefore you have time to escape, four shadowy figures approach from across the kitchen.  "
+          "They are:\n\n Aunt Kara - quite affectionate \n Uncle Joe - the fisherman \n Granny Lelu - a 'master' cook "
+          "\n "
+          "Grandpappy Aaron - notorious for war-story hyperbole")
+    print("\n")
 
 
 def begin_main():
@@ -33,6 +43,10 @@ def begin_main():
     for dir in lst[11:]:
         print(dir.center(225))
         time.sleep(5)
+    time.sleep(2)
+    to_microwave()
+    time.sleep(6)
+    print("**********************************************\n")
 
 
 if __name__ == '__main__':

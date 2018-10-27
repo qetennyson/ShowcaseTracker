@@ -60,12 +60,19 @@ def intro_text(player="Default Person"):
 
 def get_acceptance(player="Default Person"):
     p_choice = input()
-    if p_choice.lower().strip()[0] == 'y':
-        print(f"Here we go {player}...")
-    elif p_choice.lower().strip()[0] == 'n':
-        print(f"Well, {player}, you're doing this anyway.")
-    else:
-        print(f"No clue what you typed there {player}, no matter, here we go!")
+    try:
+        if p_choice.lower().strip()[0] == 'y':
+            print(f"Here we go {player}...")
+        elif p_choice.lower().strip()[0] == 'n':
+            print(f"Well, {player}, you're doing this anyway.")
+        elif len(p_choice.lower().strip()[0]) == 0:
+            print(f"No clue what you typed there {player}, no matter, here we go!\n")
+        else:
+            print(f"No clue what you typed there {player}, no matter, here we go!\n")
+    except IndexError:
+        print(f"No clue what you typed there {player}, no matter, here we go!\n")
+
+
 
 
 def get_player():

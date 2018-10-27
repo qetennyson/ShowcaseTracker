@@ -214,11 +214,14 @@ def pizza_main():
 
         if time_left <= 0:
             game_won = True
+            print("\n *** The pizza rolls are done!  Time to escape *** \b")
             end.ending_main(game_won)
             break
 
         if len(relatives_proper) == 0:
             game_won = False
+            print("\n *** The microwave is still going, but your parents have finally found you. Looks like you're "
+                  "staying downstairs...\n")
             end.ending_main(game_won)
             break
 

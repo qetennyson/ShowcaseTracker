@@ -15,25 +15,25 @@ intros = {
 
 # Main questions from Relatives
 main_questions = {
-    'aunt_kara': "Hey sweetie, you got so big! I remember when you were a little baby. Oh, it makes me feel so old. How "
-                 "is school?\n a. Awful\n b. Pretty good...\n c. Great, thanks for asking!\n d. *awkwardly avoid*\n",
-    'uncle_joe': "What's up kid! It's been years since I've seen you. I really need to take you out to the lake, "
-                 "it's a family tradition! How was summer camp?\n a. Fun! I got to go fishing\n b. I didn't go\n c. "
+    'aunt_kara': " Hey sweetie, you got so big! I remember when you were a little baby. Oh, it makes me feel so old. How "
+                 "is school?\n\n a. Awful\n b. Pretty good...\n c. Great, thanks for asking!\n d. *awkwardly avoid*\n",
+    'uncle_joe': " What's up kid! It's been years since I've seen you. I really need to take you out to the lake, "
+                 "it's a family tradition! How was summer camp?\n\n a. Fun! I got to go fishing\n b. I didn't go\n c. "
                  "Please go away\n d. *awkwardly avoid*\n",
 
-    'granny_lelu': "Oh hello honey, they put me in charge of dessert this year. I tried something different: black "
+    'granny_lelu': " Oh hello honey, they put me in charge of dessert this year. I tried something different: black "
                    "licorice, candy corn, raisins, and you see those colorful little bits on the top...sugar free Haribo "
-                   "gummy bears. You wanna try some?\n a. I'll try a little of your dish later \n b. Um I don't think "
-                   "I'll have room for dessert this year granny, sorry. \n c.I don't really care Granny. \n d. * "
+                   "gummy bears. You wanna try some?\n\n a. I'll try a little of your dish later \n b. Um I don't think "
+                   "I'll have room for dessert this year granny, sorry. \n c. I don't really care Granny. \n d. * "
                    "awkwardly avoid *",
 
-    'grandpappy_aaron': "Hey whipper snapper! Either you're getting bigger or my eyes are getting even worse. At least my "
-                        "eyes weren't this bad during the war! Speaking of which did I ever tell you about how I carried "
-                        "five guys over enemy lines and destroyed a tank using nothing but a roll of toilet paper? I "
-                        "almost blew my leg off too, that is when they could catch me! Though the war pays some good "
-                        "money and will give you as much money as I have! In fact I think you should join the army, "
-                        "teaches you some pretty good stuff and you'll only almost die two-thirds of the time! But then "
-                        "again I was the best soldier out there so maybe you will be too. What'da say?\n a. Sounds "
+    'grandpappy_aaron': " Hey whipper snapper! Either you're getting bigger or my eyes are getting even worse. At least my\n "
+                        "eyes weren't this bad during the war! Speaking of which did I ever tell you about how I carried\n "
+                        "five guys over enemy lines and destroyed a tank using nothing but a roll of toilet paper? I\n "
+                        "almost blew my leg off too, that is when they could catch me! Though the war pays some good\n "
+                        "money and will give you as much money as I have! In fact I think you should join the army,\n "
+                        "teaches you some pretty good stuff and you'll only almost die two-thirds of the time! But then\n "
+                        "again I was the best soldier out there so maybe you will be too. What'da say?\n\n a. Sounds "
                         "interesting, I'll gladly check it out! \n b. I wasn't thinking about it about it but I'll see. "
                         "\n c. I think I'll hide in my room instead. \n d. * awkwardly avoid *",
 }
@@ -113,9 +113,9 @@ time_factor = {
         'd': 10,
     },
     'granny_lelu': {
-        'a': 90,
-        'b': 85,
-        'c': 70,
+        'a': 80,
+        'b': 70,
+        'c': 60,
         'd': 10,
     },
     'grandpappy_aaron': {
@@ -142,26 +142,32 @@ def relative_intro(relative):
 def get_relative(relatives_available):
     while True:
         print("Who would you like to talk to?\n")
-        i = 1
+
         for char in relatives_available:
-            print(f"{i}. {char}")
-            i += 1
+            print(f"* {char}")
+
         print("\n")
-        choice = input("Choose your relative by entering the number: ")
-        if choice == '1':
-            relatives_proper.remove('Aunt Kara')
-            return 'aunt_kara'
-        elif choice == '2':
-            relatives_proper.remove('Uncle Joe')
-            return 'uncle_joe'
-        elif choice == '3':
-            relatives_proper.remove('Granny Lelu')
-            return 'granny_lelu'
-        elif choice == '4':
-            relatives_proper.remove('Grandpappy Aaron')
-            return 'grandpappy_aaron'
-        else:
-            print("Invalid entry...")
+
+        # Character choice menu
+        choice = input("Type the name of the relative you'll speak to: ")
+        try:
+            if 'auntkara' in choice.lower().strip().replace(' ', ''):
+                relatives_proper.remove('Aunt Kara')
+                return 'aunt_kara'
+            elif 'unclejoe' in choice.lower().strip().replace(' ', ''):
+                relatives_proper.remove('Uncle Joe')
+                return 'uncle_joe'
+            elif 'grannylelu' in choice.lower().strip().replace(' ', ''):
+                relatives_proper.remove('Granny Lelu')
+                return 'granny_lelu'
+            elif 'grandpappyaaron' in choice.lower().strip().replace(' ', '') or \
+                    'grandpapyaaron' in choice.lower().strip().replace(' ', ''):
+                relatives_proper.remove('Grandpappy Aaron')
+                return 'grandpappy_aaron'
+            else:
+                print("Invalid entry... make sure you spelled it right!")
+        except ValueError:
+            print(f"\n{choice.title()} has already walked away, choose someone else.\n")
 
 
 def get_answer_responses(relative, answer):
@@ -172,6 +178,7 @@ def get_answer_responses(relative, answer):
 
     time.sleep(2)
 
+    # outros based on a,b,c or d response.
     print(relative_response[f'outro_{answer}'])
 
     return get_time(answer, relative)
@@ -184,17 +191,15 @@ def get_time(answer, relative):
 
 def get_user_answer():
     while True:
-        answer = input("Enter your answer - a, b, c, or d: ")
-        if answer in ['a', 'b', 'c', 'd']:
+        answer = input("\nEnter your answer - a, b, c, or d: ")
+        if answer.lower().strip()[0] in ['a', 'b', 'c', 'd']:
             return answer
         else:
             print("Please answer with a, b, c, or d.")
 
-def end_game():
-    pass
-
 
 def pizza_main():
+    global time_left
     while time_left > 0:
 
         # Clean the choice string from the player and add the underscore for key search
@@ -215,12 +220,14 @@ def pizza_main():
 
         get_answer_responses(current_relative, user_answer)
 
-        time_left -=
+        time_left -= get_time(user_answer, current_relative)
 
-        if len(relatives_proper) == 0:
+        if time_left <= 0:
+            # TODO: win game
             break
-
-    end_game()
+        elif len(relatives_proper):
+            # TODO: lose game
+            pass
 
 
 if __name__ == '__main__':
